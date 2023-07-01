@@ -187,12 +187,12 @@ def main():
     # Create the display instance
     display = Display("Shape Simulator")
 
-    # Create a rectangle instance
+    # Create a shape instances
     rectangle = Rectangle(20, 20, 100, 200)
-
-    # Append the rectangle to the display rectangles list
+    circle = Circle(400, 400, 10, COLOR_PALETTE[3], COLOR_PALETTE[4], -1)
+    # Append the shapes to the display shapes list
     display.append(rectangle)
-
+    display.append(circle)
     # Change the shape colors on a schedule
     arcade.schedule(display.change_colors, 1)
 
