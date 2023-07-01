@@ -20,8 +20,10 @@ COLOR_PALETTE = [
     arcade.color.LIGHT_SLATE_GRAY,
 ]
 
+
 class Rectangle:
     """ This class defines a simple rectangle object """
+
     def __init__(
             self,
             x: int,
@@ -35,8 +37,8 @@ class Rectangle:
             speed_x: int = 1,
             speed_y: int = 1
     ):
-        self.x = x
-        self.y = y
+        self._x = x
+        self._y = y
         self.width = width
         self.height = height
         self.pen_color = pen_color
@@ -45,6 +47,26 @@ class Rectangle:
         self.dir_y = 1 if dir_y > 0 else -1
         self.speed_x = speed_x
         self.speed_y = speed_y
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value: int):
+        if not (0 < value < SCREEN_WIDTH - self.width):
+            self.dir_x = -self.dir_x
+        self._x += abs(self._x - value) * self.dir_x
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value: int):
+        if not (0 < value < SCREEN_HEIGHT - self.height):
+            self.dir_y = -self.dir_y
+        self._y += abs(self._y - value) * self.dir_y
 
     def set_pen_color(self, color: tuple) -> Rectangle:
         self.pen_color = color
@@ -62,6 +84,7 @@ class Rectangle:
         arcade.draw_xywh_rectangle_outline(
             self.x, self.y, self.width, self.height, self.pen_color, 3
         )
+
 
 class Display(arcade.Window):
     """ Main display window """
@@ -105,7 +128,8 @@ class Display(arcade.Window):
             interval {int} -- interval passed in from the arcade schedule function
         """
         for rectangle in self.rectangles:
-            rectangle.set_pen_color(choice(COLOR_PALETTE)).set_fill_color(choice(COLOR_PALETTE))
+            rectangle.set_pen_color(choice(COLOR_PALETTE)).set_fill_color(
+                choice(COLOR_PALETTE))
 
 
 def main():
@@ -123,6 +147,7 @@ def main():
 
     # Run the application
     arcade.run()
+
 
 if __name__ == "__main__":
     main()
