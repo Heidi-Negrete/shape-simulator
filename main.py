@@ -21,8 +21,8 @@ COLOR_PALETTE = [
 ]
 
 
-class Rectangle:
-    """ This class defines a simple rectangle object """
+class Shape:
+    """ This class defines a simple shape """
 
     def __init__(
             self,
@@ -77,12 +77,63 @@ class Rectangle:
         return self
 
     def draw(self):
+        """ Inheriting classes will override this method """
+        pass
+
+
+class Rectangle(Shape):
+
+    def draw(self):
         """ Draw the rectangle based on the current state """
         arcade.draw_xywh_rectangle_filled(
             self.x, self.y, self.width, self.height, self.fill_color
         )
         arcade.draw_xywh_rectangle_outline(
             self.x, self.y, self.width, self.height, self.pen_color, 3
+        )
+
+
+class Circle(Shape):
+    def __init__(
+            self,
+            x: int,
+            y: int,
+            radius: int,
+            pen_color: tuple = COLOR_PALETTE[0],
+            fill_color: tuple = COLOR_PALETTE[1],
+            dir_x: int = 1,
+            dir_y: int = 1,
+            speed_x: int = 1,
+            speed_y: int = 1,
+    ):
+        super().__init__(
+            x,
+            y,
+            radius * 2,
+            radius * 2,
+            pen_color,
+            fill_color,
+            dir_x,
+            dir_y,
+            speed_x,
+            speed_y,
+        )
+
+    def draw(self):
+        radius = self.width / 2
+        center_x = self.x + radius
+        center_y = self.y + radius
+        arcade.draw_circle_filled(
+            center_x,
+            center_y,
+            radius,
+            self.fill_color
+        )
+        arcade.draw_circle_outline(
+            center_x,
+            center_y,
+            radius,
+            self.pen_color
         )
 
 
@@ -96,20 +147,20 @@ class Display(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, screen_title)
 
         # Create the rectangles collection
-        self.rectangles = []
+        self.shapes = []
 
         # Set the window's background color
         arcade.set_background_color(arcade.color.WHITE)
 
-    def append(self, rectangle: Rectangle):
+    def append(self, shape: Shape):
         """ Appends an instance of a rectangle to the list of rectangles """
-        self.rectangles.append(rectangle)
+        self.shapes.append(shape)
 
     def on_update(self, delta_time):
         " Update the position of the rectangles in the display "
-        for rectangle in self.rectangles:
-            rectangle.x += rectangle.speed_x
-            rectangle.y += rectangle.speed_y
+        for shape in self.shapes:
+            shape.x += shape.speed_x
+            shape.y += shape.speed_y
 
     def on_draw(self):
         """ Called whenever you need to draw your window """
@@ -118,8 +169,8 @@ class Display(arcade.Window):
         arcade.start_render()
 
         # Draw the rectangles
-        for rectangle in self.rectangles:
-            rectangle.draw()
+        for shape in self.shapes:
+            shape.draw()
 
     def change_colors(self, interval):
         """ This function is called once a second to change the colors of all the rectangles to a random selection from COLOR_PALETTE
@@ -127,8 +178,8 @@ class Display(arcade.Window):
         Arguments:
             interval {int} -- interval passed in from the arcade schedule function
         """
-        for rectangle in self.rectangles:
-            rectangle.set_pen_color(choice(COLOR_PALETTE)).set_fill_color(
+        for shape in self.shapes:
+            shape.set_pen_color(choice(COLOR_PALETTE)).set_fill_color(
                 choice(COLOR_PALETTE))
 
 
