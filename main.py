@@ -93,6 +93,32 @@ class Rectangle(Shape):
         )
 
 
+class Square(Rectangle):
+    def __init__(
+            self,
+            x: int,
+            y: int,
+            size: int,
+            pen_color: tuple = COLOR_PALETTE[0],
+            fill_color: tuple = COLOR_PALETTE[1],
+            dir_x: int = 1,
+            dir_y: int = 1,
+            speed_x: int = 1,
+            speed_y: int = 1,
+    ):
+        super().__init__(
+            x, y,
+            size,
+            size,
+            pen_color,
+            fill_color,
+            dir_x,
+            dir_y,
+            speed_x,
+            speed_y
+        )
+
+
 class Circle(Shape):
     def __init__(
             self,
@@ -190,9 +216,12 @@ def main():
     # Create a shape instances
     rectangle = Rectangle(20, 20, 100, 200)
     circle = Circle(400, 400, 10, COLOR_PALETTE[3], COLOR_PALETTE[4], -1)
+    square = Square(80, 300, 100, choice(COLOR_PALETTE),
+                    choice(COLOR_PALETTE), 1, -1)
     # Append the shapes to the display shapes list
     display.append(rectangle)
     display.append(circle)
+    display.append(square)
     # Change the shape colors on a schedule
     arcade.schedule(display.change_colors, 1)
 
